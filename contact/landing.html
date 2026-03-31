@@ -18,6 +18,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
 
         .container {
@@ -26,7 +27,7 @@
             border-radius: 10px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
             max-width: 500px;
-            width: 90%;
+            width: 100%;
         }
 
         h1 {
@@ -41,7 +42,7 @@
             gap: 20px;
         }
 
-        input, textarea {
+        input, textarea, select {
             padding: 12px;
             border: 1px solid #ddd;
             border-radius: 5px;
@@ -49,7 +50,7 @@
             font-size: 14px;
         }
 
-        input:focus, textarea:focus {
+        input:focus, textarea:focus, select:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
@@ -60,7 +61,15 @@
             min-height: 120px;
         }
 
-        button {
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button, .btn {
+            flex: 1;
+            min-width: 150px;
             padding: 12px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -70,10 +79,22 @@
             font-weight: bold;
             cursor: pointer;
             transition: transform 0.2s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        button:hover {
+        button:hover, .btn:hover {
             transform: translateY(-2px);
+        }
+
+        button:active, .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
 
         .social-links {
@@ -93,17 +114,60 @@
         .social-links a:hover {
             color: #764ba2;
         }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Contattami</h1>
         <form action="https://formspree.io/f/xkoprakr" method="POST">
-            <input type="text" name="name" placeholder="Il tuo nome" required>
-            <input type="email" name="email" placeholder="La tua email" required>
-            <input type="text" name="subject" placeholder="Oggetto" required>
-            <textarea name="message" placeholder="Il tuo messaggio" required></textarea>
-            <button type="submit">Invia</button>
+            <div class="form-group">
+                <label for="name">Nome *</label>
+                <input type="text" id="name" name="name" placeholder="Il tuo nome" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" placeholder="La tua email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="mada">Progetto/Tema (Mada) *</label>
+                <select id="mada" name="mada" required>
+                    <option value="">-- Seleziona --</option>
+                    <option value="web-development">Web Development</option>
+                    <option value="mobile-app">Mobile App</option>
+                    <option value="design">Design</option>
+                    <option value="consulting">Consulting</option>
+                    <option value="other">Altro</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="subject">Oggetto *</label>
+                <input type="text" id="subject" name="subject" placeholder="Oggetto del messaggio" required>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Messaggio *</label>
+                <textarea id="message" name="message" placeholder="Il tuo messaggio" required></textarea>
+            </div>
+
+            <div class="button-group">
+                <button type="submit">Invia Messaggio</button>
+                <button type="button" class="btn-secondary" onclick="downloadVCard()">💾 Salva Contatto</button>
+            </div>
         </form>
 
         <div class="social-links">
@@ -112,5 +176,34 @@
             <a href="https://twitter.com/tuoutente">Twitter</a>
         </div>
     </div>
+
+    <script>
+        function downloadVCard() {
+            // Personalizza questi dati con i tuoi
+            const vCardData = `BEGIN:VCARD
+VERSION:3.0
+FN:Ilbollom
+N:Ilbollom;;;
+EMAIL;TYPE=INTERNET:tuaemail@example.com
+TEL;TYPE=MOBILE:+39 123 456 7890
+TEL;TYPE=WORK:+39 987 654 3210
+ORG:Il Bollom
+TITLE:Developer/Designer
+URL;TYPE=HOMEPAGE:https://ilbollom.github.io
+URL;TYPE=WORK:https://github.com/ilbollom
+ADR;TYPE=WORK:;;Via Example;City;;00000;Italy
+NOTE:Sviluppatore e designer creativo
+END:VCARD`;
+
+            // Crea un blob e scarica il file
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/vcard;charset=utf-8,' + encodeURIComponent(vCardData));
+            element.setAttribute('download', 'ilbollom.vcf');
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+    </script>
 </body>
 </html>
